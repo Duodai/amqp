@@ -1,0 +1,9 @@
+{
+  "name": "duodai/amqp",
+  "license": "open-source",
+  "autoload": {
+    "psr-0": {
+      "duodai/amqp": "src"
+    }
+  }
+}
