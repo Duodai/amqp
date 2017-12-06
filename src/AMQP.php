@@ -2,6 +2,7 @@
 
 namespace duodai\amqp;
 
+use duodai\amqp\base\QueueName;
 use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Connection;
 use duodai\amqp\objects\Message;

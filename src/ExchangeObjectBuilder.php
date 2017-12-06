@@ -3,6 +3,7 @@
 
 namespace duodai\amqp;
 
+use duodai\amqp\base\ExchangeName;
 use duodai\amqp\dictionaries\ExchangeFlag;
 use duodai\amqp\dictionaries\ExchangeType;
 use duodai\amqp\objects\Channel;

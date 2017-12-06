@@ -3,6 +3,7 @@
 
 namespace duodai\amqp;
 
+use duodai\amqp\base\QueueName;
 use duodai\amqp\dictionaries\QueueFlag;
 use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Queue;

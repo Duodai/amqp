@@ -3,6 +3,8 @@
 
 namespace duodai\amqp;
 
+use duodai\amqp\base\ExchangeName;
+use duodai\amqp\base\RouteName;
 use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Exchange;
 use duodai\amqp\objects\Queue;
