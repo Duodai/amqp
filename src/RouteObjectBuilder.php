@@ -1,10 +1,11 @@
 <?php
 
 
-namespace duodai\amqp;
+namespace Duodai\Amqp;
 
 use duodai\amqp\base\ExchangeName;
 use duodai\amqp\base\RouteName;
+use Duodai\Amqp\exceptions\AmqpException;
 use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Exchange;
 use duodai\amqp\objects\Queue;

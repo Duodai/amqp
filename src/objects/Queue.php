@@ -3,8 +3,8 @@
 
 namespace duodai\amqp\objects;
 
-use duodai\amqp\AmqpException;
 use duodai\amqp\dictionaries\QueueFlag;
+use Duodai\Amqp\exceptions\AmqpException;
 
 /**
  * Class Queue
@@ -32,7 +32,7 @@ class Queue
      */
     protected $bindings = [];
     /**
-     * @var QueueName
+     * @var string
      */
     protected $name;
     /**
@@ -42,12 +42,12 @@ class Queue
 
 
     /**
-     * @param QueueName $name
+     * @param string $name
      * @param Channel $channel
      * @param QueueFlag[] $flags
      * @throws AmqpException
      */
-    public function __construct(QueueName $name, Channel $channel, array $flags = [])
+    public function __construct(string $name, Channel $channel, array $flags = [])
     {
         $this->component = $this->createComponent($channel);
         $this->setName($name);
@@ -65,11 +65,11 @@ class Queue
     }
 
     /**
-     * @param QueueName $name
+     * @param string $name
      */
-    protected function setName(QueueName $name)
+    protected function setName(string $name)
     {
-        $this->component->setName($name->val());
+        $this->component->setName($name);
     }
 
     /**
@@ -125,12 +125,12 @@ class Queue
     }
 
     /**
-     * @param ExchangeName $exchangeName
-     * @param RouteName $routeName
+     * @param string $exchangeName
+     * @param string $routeName
      * @return bool
      */
-    public function bind(ExchangeName $exchangeName, RouteName $routeName)
+    public function bind(string $exchangeName, string $routeName)
     {
-        return $this->component->bind($exchangeName->val(), $routeName->val());
+        return $this->component->bind($exchangeName, $routeName);
     }
 }

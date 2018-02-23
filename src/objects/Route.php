@@ -3,6 +3,8 @@
 
 namespace duodai\amqp\objects;
 
+use duodai\amqp\base\RouteName;
+
 /**
  * Class Route
  * @author Michael Janus <mailto:abyssal@mail.ru>
@@ -16,17 +18,16 @@ class Route
     protected $exchange;
 
     /**
-     * @var RouteName
+     * @var string
      */
     protected $routingKey;
 
     /**
      * @param Exchange $exchange
-     * @param RouteName|null $routingKey
+     * @param string $routingKey
      */
-    public function __construct(Exchange $exchange, RouteName $routingKey)
+    public function __construct(Exchange $exchange, string $routingKey)
     {
-
         $this->exchange = $exchange;
         $this->routingKey = $routingKey;
     }
@@ -44,7 +45,7 @@ class Route
     /**
      * Get routing (binding) key
      *
-     * @return RouteName
+     * @return string
      */
     public function getRoutingKey()
     {

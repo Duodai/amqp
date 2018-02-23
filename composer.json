@@ -1,9 +1,28 @@
 {
-  "name": "duodai/amqp",
-  "license": "open-source",
+  "name":         "duodai/amqp",
+  "description":  "Simple object-oriented wrapper for php amqp extension",
+  "keywords":     ["amqp", "rabbitmq"],
+  "type":         "library",
+  "license":      "MIT",
+  "authors":      [
+    {
+      "name":      "Michael Janus",
+      "email":     "michael.bifrons@gmail.com"
+    }
+  ],
+
+  "require": {
+    "php": ">=7.1.0",
+    "ext-amqp": ">=1.9.0",
+    "webmozart/assert": "1.2"
+  },
+
+  "require-dev": {
+  },
+
   "autoload": {
     "psr-0": {
-      "duodai/amqp": "src"
+      "Duodai\\Amqp":   "src/"
     }
   }
 }

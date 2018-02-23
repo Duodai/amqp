@@ -9,7 +9,7 @@ namespace duodai\amqp\common;
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
 abstract class Enum
-{ //TODO Make stand-alone package for helpers and common classes
+{
     /**
      * Current value
      *

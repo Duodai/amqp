@@ -3,9 +3,10 @@
 
 namespace duodai\amqp\objects;
 
-use duodai\amqp\AmqpException;
+
 use duodai\amqp\dictionaries\ExchangeFlag;
 use duodai\amqp\dictionaries\ExchangeType;
+use Duodai\Amqp\exceptions\AmqpException;
 
 /**
  * Class Exchange
@@ -36,18 +37,18 @@ class Exchange
     protected $type;
 
     /**
-     * @var ExchangeName
+     * @var string
      */
     protected $name;
 
     /**
-     * @param ExchangeName $name
+     * @param string $name
      * @param ExchangeType $type
      * @param Channel $channel
      * @param ExchangeFlag[] $flags
      * @throws AmqpException
      */
-    public function __construct(ExchangeName $name, ExchangeType $type, Channel $channel, array $flags = [])
+    public function __construct(string $name, ExchangeType $type, Channel $channel, array $flags = [])
     {
         $this->component = $this->createComponent($channel);
         $this->setName($name);
@@ -67,7 +68,6 @@ class Exchange
 
     /**
      * @param ExchangeType $type
-     * @return bool
      */
     protected function setType(ExchangeType $type)
     {
@@ -98,21 +98,17 @@ class Exchange
      */
     public function push(Message $message)
     {
-        $this->component->publish(
+        $result = $this->component->publish(
             $message->getBody(),
-            $message->getRoute()->val(),
+            $message->getRoute(),
             $message->getFlags(),
             $message->getAttributes()
         );
-        /*
-         TODO Currently amqp extension returns null instead of boolean.
-         If anything changes - make normal return here.
-         */
-        return true;
+        return is_null($result)?true:$result;
     }
 
     /**
-     * @return ExchangeName
+     * @return string
      */
     public function getName()
     {
@@ -122,22 +118,22 @@ class Exchange
     /**
      * Set exchange name
      *
-     * @param ExchangeName $name
+     * @param string $name
      */
-    protected function setName(ExchangeName $name)
+    protected function setName(string $name)
     {
         $this->name = $name;
-        $this->component->setName($name->val());
+        $this->component->setName($name);
     }
 
     /**
      * Declare binding to another exchange
-     * @param ExchangeName $exchangeName
-     * @param RouteName $routeName
+     * @param string $exchangeName
+     * @param string $routeName
      * @return bool
      */
-    public function bind(ExchangeName $exchangeName, RouteName $routeName)
+    public function bind(string $exchangeName, string $routeName)
     {
-        return $this->component->bind($exchangeName->val(), $routeName->val());
+        return $this->component->bind($exchangeName, $routeName);
     }
 }

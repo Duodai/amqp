@@ -3,6 +3,7 @@
 namespace duodai\amqp;
 
 use duodai\amqp\base\QueueName;
+use duodai\amqp\config\Config;
 use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Connection;
 use duodai\amqp\objects\Message;
@@ -39,12 +40,11 @@ class AMQP
     protected $channel;
 
     /**
-     * @param array $settings
-     * @throws AmqpException
+     * @param array $config
      */
-    public function __construct(array $settings = [])
+    public function __construct(array $config)
     {
-        $this->config = new Configuration($settings);
+        $this->config = new Config($config);
         foreach ($this->config->getConnectionConfigurations() as $connectionConfig) {
             $this->connections[] = $this->createConnection($connectionConfig);
         }

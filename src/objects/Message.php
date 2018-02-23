@@ -3,7 +3,7 @@
 
 namespace duodai\amqp\objects;
 
-use duodai\amqp\AmqpException;
+use duodai\amqp\exceptions\AmqpException;
 use duodai\amqp\dictionaries\MessageAttribute;
 use duodai\amqp\dictionaries\MessageFlag;
 
@@ -20,7 +20,7 @@ class Message
      */
     protected $body;
     /**
-     * @var RouteName
+     * @var string
      */
     protected $route;
     /**
@@ -34,10 +34,10 @@ class Message
 
     /**
      * @param $body
-     * @param RouteName $route
+     * @param string $route
      * @throws AmqpException
      */
-    public function __construct($body, RouteName $route)
+    public function __construct($body, string $route)
     {
         if (!is_string($body)) {
             throw new AmqpException(__CLASS__ . '::' . __FUNCTION__ . ' error: $body must be a string.');
@@ -57,7 +57,6 @@ class Message
 
     /**
      * Add message attribute
-     *
      * @param MessageAttribute $attribute
      */
     public function setAttribute(MessageAttribute $attribute)
@@ -67,7 +66,6 @@ class Message
 
     /**
      * Add message flag
-     *
      * @param MessageFlag $flag
      */
     public function setFlag(MessageFlag $flag)
@@ -77,7 +75,6 @@ class Message
 
     /**
      * Get message flags in bit-mask format
-     *
      * @return number
      */
     public function getFlags()
@@ -87,7 +84,6 @@ class Message
 
     /**
      * Get message body
-     *
      * @return string
      */
     public function getBody()
@@ -97,8 +93,7 @@ class Message
 
     /**
      * Get route id
-     *
-     * @return RouteName
+     * @return string
      */
     public function getRoute()
     {
@@ -107,7 +102,6 @@ class Message
 
     /**
      * Get all message attributes
-     *
      * @return array
      */
     public function getAttributes()

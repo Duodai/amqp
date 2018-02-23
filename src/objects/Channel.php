@@ -6,7 +6,6 @@ namespace duodai\amqp\objects;
 /**
  * Class Channel
  * AMQP Channel wrapper
- * @author Michael Janus <mailto:abyssal@mail.ru>
  */
 class Channel extends \AMQPChannel
 {
