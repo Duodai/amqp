@@ -1,11 +1,11 @@
 <?php
 
 
-namespace duodai\amqp\objects;
+namespace Duodai\Amqp\objects;
 
 
-use duodai\amqp\dictionaries\ExchangeFlag;
-use duodai\amqp\dictionaries\ExchangeType;
+use Duodai\Amqp\dictionaries\ExchangeFlag;
+use Duodai\Amqp\dictionaries\ExchangeType;
 use Duodai\Amqp\exceptions\AmqpException;
 
 /**

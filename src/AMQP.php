@@ -1,15 +1,19 @@
 <?php
 
-namespace duodai\amqp;
+namespace Duodai\Amqp;
 
-use duodai\amqp\base\QueueName;
-use duodai\amqp\config\Config;
-use duodai\amqp\objects\Channel;
-use duodai\amqp\objects\Connection;
-use duodai\amqp\objects\Message;
-use duodai\amqp\objects\Output;
-use duodai\amqp\objects\Queue;
-use duodai\amqp\objects\Route;
+use Duodai\Amqp\builders\QueueObjectBuilder;
+use Duodai\Amqp\builders\RouteObjectBuilder;
+use Duodai\Amqp\config\Config;
+use Duodai\Amqp\config\ServerConfig;
+use Duodai\Amqp\exceptions\AmqpException;
+use Duodai\Amqp\objects\Channel;
+use Duodai\Amqp\objects\Connection;
+use Duodai\Amqp\objects\Message;
+use Duodai\Amqp\objects\Output;
+use Duodai\Amqp\objects\Queue;
+use Duodai\Amqp\objects\Route;
+use Webmozart\Assert\Assert;
 
 /**
  * Class AMQP
@@ -18,16 +22,8 @@ use duodai\amqp\objects\Route;
  */
 class AMQP
 {
-    // TODO Review app structure, make it more flexible and less config-dependent
-    // TODO rework component configuration, since component is now a composer package and it's folder is read-only
-    // TODO replace webmozart/assert usage with own validation component
-    // TODO add some means to declare queues on the fly
-    // TODO test and correct PSR-0 namespaces
-    // TODO add unit tests
-    // TODO test installing via composer
-
     /**
-     * @var Configuration
+     * @var Config
      */
     protected $config;
     /**
@@ -45,27 +41,27 @@ class AMQP
     public function __construct(array $config)
     {
         $this->config = new Config($config);
-        foreach ($this->config->getConnectionConfigurations() as $connectionConfig) {
+        foreach ($this->config->getServers() as $connectionConfig) {
             $this->connections[] = $this->createConnection($connectionConfig);
         }
     }
 
     /**
-     * @param array $config
+     * @param ServerConfig $config
      * @return Connection
      */
-    protected function createConnection(array $config)
+    protected function createConnection(ServerConfig $config)
     {
-        return new Connection($config);
+        return new Connection($config->getConfig());
     }
 
     /**
      * Get message from queue
-     * @param QueueName $queueName
+     * @param string $queueName
      * @param bool|false $autoAck
      * @return Output|null
      */
-    public function pull(QueueName $queueName, $autoAck = false)
+    public function pull(string $queueName, $autoAck = false)
     {
         Assert::boolean($autoAck, __METHOD__ . ' error: $autoAck must be boolean, got ' . gettype($autoAck));
         $this->ensureIsConnected();
@@ -98,13 +94,20 @@ class AMQP
      */
     protected function getAccessibleConnection()
     {
-        for ($i = 0; $i < $this->config->getMaxTriesToConnect(); $i++) {
-            $connections = $this->connections;
+        $settings = $this->config->getSettings();
+        $connections = $this->connections;
+        if ($settings->isShuffleConnections()) {
             shuffle($connections);
-            while (count($connections) > 0) {
-                $connection = array_shift($connections);
+        }
+        $interval = $settings->getConnectTriesInterval();
+        foreach ($connections as $connection) {
+            for ($i = 0; $i < $settings->getConnectTriesLimit(); $i++) {
                 if ($connection->connect()) {
                     return $connection;
+                }
+                usleep($interval);
+                if ($settings->isConnectIntervalIncremental()) {
+                    $interval = $interval + $settings->getConnectIncrement();
                 }
             }
         }
@@ -121,11 +124,11 @@ class AMQP
     }
 
     /**
-     * @param QueueName $name
+     * @param string $name
      * @param Channel $channel
      * @return Queue
      */
-    protected function buildQueueObject(QueueName $name, Channel $channel)
+    protected function buildQueueObject(string $name, Channel $channel)
     {
         return $this->getQueueBuilder()->create($name, $channel);
     }
@@ -135,7 +138,7 @@ class AMQP
      */
     protected function getQueueBuilder()
     {
-        return new QueueObjectBuilder();
+        return new QueueObjectBuilder($this->config->getQueues());
     }
 
     /**
@@ -152,11 +155,11 @@ class AMQP
     }
 
     /**
-     * @param RouteName $routeName
+     * @param string $routeName
      * @param Channel $channel
      * @return Route
      */
-    protected function buildRouteObject(RouteName $routeName, Channel $channel)
+    protected function buildRouteObject(string $routeName, Channel $channel)
     {
         return $this->getRouteBuilder()->create($routeName, $channel);
     }
@@ -194,10 +197,10 @@ class AMQP
     /**
      * Generate new Message object
      * @param string $data
-     * @param RouteName $route
+     * @param string $route
      * @return Message
      */
-    public function createMessage($data, RouteName $route)
+    public function createMessage($data, string $route)
     {
         return new Message($data, $route);
     }

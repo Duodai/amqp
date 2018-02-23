@@ -1,7 +1,7 @@
 <?php
 
 
-namespace duodai\amqp\config;
+namespace Duodai\Amqp\config;
 use Duodai\Amqp\exceptions\AmqpException;
 
 /**
@@ -46,5 +46,10 @@ class ExchangeConfig
     public function getConfig()
     {
         return $this->config;
+    }
+
+    public function getList()
+    {
+        return array_keys($this->config);
     }
 }

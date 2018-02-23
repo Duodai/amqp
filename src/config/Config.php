@@ -1,6 +1,6 @@
 <?php
 
-namespace duodai\amqp\config;
+namespace Duodai\Amqp\config;
 
 use Duodai\Amqp\exceptions\AmqpException;
 
@@ -10,6 +10,10 @@ class Config
     const QUEUES_OPTION = 'queues';
     const ROUTES_OPTION = 'routes';
     const SERVERS_OPTION = 'servers';
+    /**
+     *
+     */
+    const SETTINGS_OPTION = 'settings';
 
     /**
      * @var ServerConfig[]
@@ -28,56 +32,77 @@ class Config
      */
     protected $routes;
 
+    /**
+     * @var SettingsConfig
+     */
+    protected $settings;
 
-    public function __construct(array $config){
-        if(empty($config[self::SERVERS_OPTION])){
+
+    public function __construct(array $config)
+    {
+        if (empty($config[self::SERVERS_OPTION])) {
             throw new AmqpException('Amqp configuration error: ' . self::SERVERS_OPTION . ' section is required');
         }
         foreach ($config[self::SERVERS_OPTION] as $server) {
             $this->servers[] = new ServerConfig($server);
         }
 
-        if(!empty($config[self::EXCHANGES_OPTION])){
+        if (!empty($config[self::EXCHANGES_OPTION])) {
             $this->exchanges = new ExchangeConfig($config[self::EXCHANGES_OPTION]);
         }
 
-        if(!empty($config[self::QUEUES_OPTION])){
+        if (!empty($config[self::QUEUES_OPTION])) {
             $this->queues = new QueueConfig($config[self::QUEUES_OPTION]);
         }
-        if(!empty($config[self::ROUTES_OPTION])){
+        if (!empty($config[self::ROUTES_OPTION])) {
             $this->routes = new RouteConfig($config[self::ROUTES_OPTION]);
+        }
+
+        if (!empty($config[self::SETTINGS_OPTION])) {
+            $this->settings = new SettingsConfig($config[self::SETTINGS_OPTION]);
         }
     }
 
     /**
-     * @return SettingsConfig
+     * @return ServerConfig[]
      */
-    public function getSettings(): SettingsConfig
+    public function getServers(): array
     {
-        return $this->settings;
+        return $this->servers;
     }
 
     /**
-     * @return ExchangeConfig
+     * @return ExchangeConfig|null
      */
-    public function getExchanges(): ExchangeConfig
+    public function getExchanges(): ?ExchangeConfig
     {
         return $this->exchanges;
     }
 
     /**
-     * @return QueueConfig
+     * @return QueueConfig|null
      */
-    public function getQueues(): QueueConfig
+    public function getQueues(): ?QueueConfig
     {
         return $this->queues;
     }
 
     /**
-     * @return RouteConfig
+     * @return RouteConfig|null
      */
-    public function getRoutes(): RouteConfig
+    public function getRoutes(): ?RouteConfig
     {
         return $this->routes;
     }
+
+
+    /**
+     * @return SettingsConfig|null
+     */
+    public function getSettings(): ?SettingsConfig
+    {
+        return $this->settings;
+    }
+
+
 }

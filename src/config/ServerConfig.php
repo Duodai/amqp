@@ -1,7 +1,7 @@
 <?php
 
 
-namespace duodai\amqp\config;
+namespace Duodai\Amqp\config;
 
 
 use Duodai\Amqp\exceptions\AmqpException;
@@ -17,7 +17,6 @@ class ServerConfig
     const READ_TIMEOUT = 'read_timeout';
     const WRITE_TIMEOUT = 'write_timeout';
     const CONNECT_TIMEOUT = 'connect_timeout';
-    const CONNECT_TRIES_LIMIT = 'connectTriesLimit';
 
     const DEFAULT_READ_TIMEOUT = 5;
     const DEFAULT_WRITE_TIMEOUT = 5;

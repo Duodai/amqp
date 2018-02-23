@@ -1,11 +1,11 @@
 <?php
 
 
-namespace duodai\amqp\objects;
+namespace Duodai\Amqp\objects;
 
-use duodai\amqp\exceptions\AmqpException;
-use duodai\amqp\dictionaries\MessageAttribute;
-use duodai\amqp\dictionaries\MessageFlag;
+use Duodai\Amqp\exceptions\AmqpException;
+use Duodai\Amqp\dictionaries\MessageAttribute;
+use Duodai\Amqp\dictionaries\MessageFlag;
 
 /**
  * Class Message

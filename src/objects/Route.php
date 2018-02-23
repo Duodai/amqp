@@ -1,9 +1,9 @@
 <?php
 
 
-namespace duodai\amqp\objects;
+namespace Duodai\Amqp\objects;
 
-use duodai\amqp\base\RouteName;
+use Duodai\Amqp\base\RouteName;
 
 /**
  * Class Route

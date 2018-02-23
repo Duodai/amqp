@@ -1,7 +1,7 @@
 <?php
 
 
-namespace duodai\amqp\config;
+namespace Duodai\Amqp\config;
 
 use Duodai\Amqp\exceptions\AmqpException;
 
@@ -57,6 +57,11 @@ class RouteConfig
     public function getConfig()
     {
         return $this->config;
+    }
+
+    public function getList()
+    {
+        return array_keys($this->config);
     }
 
 }

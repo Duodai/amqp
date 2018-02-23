@@ -1,15 +1,14 @@
 <?php
 
 
-namespace Duodai\Amqp;
+namespace Duodai\Amqp\builders;
 
-use duodai\amqp\base\ExchangeName;
-use duodai\amqp\base\RouteName;
+use Duodai\Amqp\config\RouteConfig;
 use Duodai\Amqp\exceptions\AmqpException;
-use duodai\amqp\objects\Channel;
-use duodai\amqp\objects\Exchange;
-use duodai\amqp\objects\Queue;
-use duodai\amqp\objects\Route;
+use Duodai\Amqp\objects\Channel;
+use Duodai\Amqp\objects\Exchange;
+use Duodai\Amqp\objects\Queue;
+use Duodai\Amqp\objects\Route;
 
 
 /**
@@ -21,17 +20,31 @@ class RouteObjectBuilder
 {
 
     /**
+     * @var RouteConfig
+     */
+    protected $config;
+
+    /**
+     * RouteObjectBuilder constructor.
+     * @param RouteConfig $config
+     */
+    public function __construct(RouteConfig $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
      * Construct Route object
      *
-     * @param RouteName $route
+     * @param string $route
      * @param Channel $channel
      * @return Route
      * @throws AmqpException
      */
-    public function create(RouteName $route, Channel $channel)
+    public function create(string $route, Channel $channel)
     {
         // Get current route config
-        $config = $this->getConfig($route);
+        $config = $this->config->getRouteConfig($route);
         // Declare exchanges to avoid pushing to non-existent exchanges
         $exchanges = $this->declareExchanges($config, $channel);
         // Declare queues to avoid routing message to nowhere because of not yet declared queues
@@ -43,23 +56,14 @@ class RouteObjectBuilder
     }
 
     /**
-     * @param RouteName $route
-     * @return RouteConfig
-     */
-    protected function getConfig(RouteName $route)
-    {
-        return new RouteConfig($route);
-    }
-
-    /**
-     * @param RouteConfig $config
+     * @param array $config
      * @param Channel $channel
      * @return mixed
      * @throws AmqpException
      */
-    protected function declareExchanges(RouteConfig $config, Channel $channel)
+    protected function declareExchanges(array $config, Channel $channel)
     {
-        $exchanges = $config->getParam($config::EXCHANGES);
+        $exchanges = $config[RouteConfig::SOURCE_EXCHANGES];
         if (is_null($exchanges)) {
             throw new AmqpException(__CLASS__ . '::' . __FUNCTION__ . ' error: Route config must contain at least one exchange');
         }
@@ -70,11 +74,11 @@ class RouteObjectBuilder
     }
 
     /**
-     * @param ExchangeName $name
+     * @param string $name
      * @param Channel $channel
      * @return Exchange
      */
-    protected function getExchange(ExchangeName $name, Channel $channel)
+    protected function getExchange(string $name, Channel $channel)
     {
         return $this->getExchangeObjectBuilder()->create($name, $channel);
     }
@@ -87,14 +91,6 @@ class RouteObjectBuilder
         return new ExchangeObjectBuilder();
     }
 
-    /**
-     * @param $name
-     * @return ExchangeName
-     */
-    protected function getExchangeName($name)
-    {
-        return new ExchangeName($name);
-    }
 
     /**
      * @param RouteConfig $config
@@ -131,20 +127,11 @@ class RouteObjectBuilder
     }
 
     /**
-     * @param $name
-     * @return QueueName
-     */
-    private function getQueueName($name)
-    {
-        return new QueueName($name);
-    }
-
-    /**
      * @param Exchange[] $exchanges
      * @param Queue[] $queues
-     * @param RouteName $routingKey
+     * @param string $routingKey
      */
-    protected function declareBinds(array $exchanges, array $queues = [], RouteName $routingKey)
+    protected function declareBinds(array $exchanges, array $queues = [], string $routingKey)
     {
         /** @var Exchange $lastExchange */
         $lastExchange = null;

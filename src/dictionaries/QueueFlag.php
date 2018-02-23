@@ -1,9 +1,9 @@
 <?php
 
 
-namespace duodai\amqp\dictionaries;
+namespace Duodai\Amqp\dictionaries;
 
-use duodai\amqp\common\Enum;
+use Duodai\Amqp\common\Enum;
 
 /**
  * Class QueueFlag

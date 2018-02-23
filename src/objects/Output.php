@@ -1,9 +1,9 @@
 <?php
 
 
-namespace duodai\amqp\objects;
+namespace Duodai\Amqp\objects;
 
-use duodai\amqp\dictionaries\OutputFlag;
+use Duodai\Amqp\dictionaries\OutputFlag;
 
 /**
  * Class Output

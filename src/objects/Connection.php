@@ -1,7 +1,7 @@
 <?php
 
 
-namespace duodai\amqp\objects;
+namespace Duodai\Amqp\objects;
 
 /**
  * Class Connection

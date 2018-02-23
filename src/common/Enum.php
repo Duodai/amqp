@@ -1,7 +1,7 @@
 <?php
 
 
-namespace duodai\amqp\common;
+namespace Duodai\Amqp\common;
 
 /**
  * Class Enum
