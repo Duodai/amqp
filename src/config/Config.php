@@ -46,21 +46,11 @@ class Config
         foreach ($config[self::SERVERS_OPTION] as $server) {
             $this->servers[] = new ServerConfig($server);
         }
+        $this->exchanges = new ExchangeConfig($config[self::EXCHANGES_OPTION] ?? []);
+        $this->queues = new QueueConfig($config[self::QUEUES_OPTION] ?? []);
+        $this->routes = new RouteConfig($config[self::ROUTES_OPTION] ?? []);
+        $this->settings = new SettingsConfig($config[self::SETTINGS_OPTION] ?? []);
 
-        if (!empty($config[self::EXCHANGES_OPTION])) {
-            $this->exchanges = new ExchangeConfig($config[self::EXCHANGES_OPTION]);
-        }
-
-        if (!empty($config[self::QUEUES_OPTION])) {
-            $this->queues = new QueueConfig($config[self::QUEUES_OPTION]);
-        }
-        if (!empty($config[self::ROUTES_OPTION])) {
-            $this->routes = new RouteConfig($config[self::ROUTES_OPTION]);
-        }
-
-        if (!empty($config[self::SETTINGS_OPTION])) {
-            $this->settings = new SettingsConfig($config[self::SETTINGS_OPTION]);
-        }
     }
 
     /**
@@ -74,7 +64,7 @@ class Config
     /**
      * @return ExchangeConfig|null
      */
-    public function getExchanges(): ?ExchangeConfig
+    public function getExchanges(): ExchangeConfig
     {
         return $this->exchanges;
     }
@@ -82,7 +72,7 @@ class Config
     /**
      * @return QueueConfig|null
      */
-    public function getQueues(): ?QueueConfig
+    public function getQueues(): QueueConfig
     {
         return $this->queues;
     }
@@ -90,7 +80,7 @@ class Config
     /**
      * @return RouteConfig|null
      */
-    public function getRoutes(): ?RouteConfig
+    public function getRoutes(): RouteConfig
     {
         return $this->routes;
     }
@@ -99,7 +89,7 @@ class Config
     /**
      * @return SettingsConfig|null
      */
-    public function getSettings(): ?SettingsConfig
+    public function getSettings(): SettingsConfig
     {
         return $this->settings;
     }
