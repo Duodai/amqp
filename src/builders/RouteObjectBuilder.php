@@ -71,8 +71,7 @@ class RouteObjectBuilder
         $queues = $this->declareQueues($queueNames, $channel);
         // Declare binds between route nodes
         $this->declareBinds($sourceExchange, $exchanges, $queues, $route);
-        $mainExchange = array_shift($exchanges);
-        return new Route($mainExchange, $route);
+        return new Route($sourceExchange, $route);
     }
 
     /**
