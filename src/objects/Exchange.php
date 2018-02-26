@@ -104,7 +104,7 @@ class Exchange
             $message->getFlags(),
             $message->getAttributes()
         );
-        return is_null($result)?true:$result;
+        return is_null($result) ? true : $result;
     }
 
     /**

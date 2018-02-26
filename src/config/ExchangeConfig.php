@@ -2,6 +2,7 @@
 
 
 namespace Duodai\Amqp\config;
+
 use Duodai\Amqp\exceptions\AmqpException;
 
 /**

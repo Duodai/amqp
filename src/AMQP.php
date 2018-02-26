@@ -2,9 +2,13 @@
 
 namespace Duodai\Amqp;
 
+use Duodai\Amqp\builders\ExchangeObjectBuilder;
 use Duodai\Amqp\builders\QueueObjectBuilder;
 use Duodai\Amqp\builders\RouteObjectBuilder;
 use Duodai\Amqp\config\Config;
+use Duodai\Amqp\config\ExchangeConfig;
+use Duodai\Amqp\config\QueueConfig;
+use Duodai\Amqp\config\RouteConfig;
 use Duodai\Amqp\config\ServerConfig;
 use Duodai\Amqp\exceptions\AmqpException;
 use Duodai\Amqp\objects\Channel;
@@ -36,14 +40,45 @@ class AMQP
     protected $channel;
 
     /**
+     * @var QueueObjectBuilder
+     */
+    protected $queueBuilder;
+    /**
+     * @var ExchangeObjectBuilder
+     */
+    protected $exchangeBuilder;
+    /**
+     * @var RouteObjectBuilder
+     */
+    protected $routeBuilder;
+
+    /**
      * @param array $config
      */
     public function __construct(array $config)
     {
         $this->config = new Config($config);
-        foreach ($this->config->getServers() as $connectionConfig) {
-            $this->connections[] = $this->createConnection($connectionConfig);
+        $this->connections = $this->initConnections(...$this->config->getServers());
+        $this->queueBuilder = $this->initQueueBuilder($this->config->getQueues());
+        $this->exchangeBuilder = $this->initExchangeBuilder($this->config->getExchanges());
+        $this->routeBuilder = $this->initRouteBuilder(
+            $this->config->getRoutes(),
+            $this->queueBuilder,
+            $this->exchangeBuilder
+        );
+    }
+
+    /**
+     * @param ServerConfig[] ...$config
+     * @return array
+     */
+    protected function initConnections(ServerConfig ...$config)
+    {
+        $connections = [];
+        foreach ($config as $connectionConfig) {
+            $connections[] = $this->createConnection($connectionConfig);
         }
+        return $connections;
     }
 
     /**
@@ -56,17 +91,49 @@ class AMQP
     }
 
     /**
-     * Get message from queue
-     * @param string $queueName
-     * @param bool|false $autoAck
-     * @return Output|null
+     * @param QueueConfig $config
+     * @return QueueObjectBuilder
      */
-    public function pull(string $queueName, $autoAck = false)
+    protected function initQueueBuilder(QueueConfig $config)
     {
-        Assert::boolean($autoAck, __METHOD__ . ' error: $autoAck must be boolean, got ' . gettype($autoAck));
+        return new QueueObjectBuilder($config);
+    }
+
+    /**
+     * @param ExchangeConfig $config
+     * @return ExchangeObjectBuilder
+     */
+    protected function initExchangeBuilder(ExchangeConfig $config)
+    {
+        return new ExchangeObjectBuilder($config);
+    }
+
+    /**
+     * @param RouteConfig $config
+     * @param QueueObjectBuilder $queueBuilder
+     * @param ExchangeObjectBuilder $exchangeBuilder
+     * @return RouteObjectBuilder
+     */
+    protected function initRouteBuilder(
+        RouteConfig $config,
+        QueueObjectBuilder $queueBuilder,
+        ExchangeObjectBuilder $exchangeBuilder
+    )
+    {
+        return new RouteObjectBuilder($config, $exchangeBuilder, $queueBuilder);
+    }
+
+    /**
+     * Put message into queue
+     * @param Message $message
+     * @return bool
+     */
+    public function push(Message $message)
+    {
         $this->ensureIsConnected();
-        $queue = $this->buildQueueObject($queueName, $this->channel);
-        return $queue->pull($autoAck);
+        $routeName = $message->getRoute();
+        $route = $this->buildRouteObject($routeName, $this->channel);
+        return $route->getExchange()->push($message);
     }
 
     /**
@@ -124,52 +191,37 @@ class AMQP
     }
 
     /**
-     * @param string $name
-     * @param Channel $channel
-     * @return Queue
-     */
-    protected function buildQueueObject(string $name, Channel $channel)
-    {
-        return $this->getQueueBuilder()->create($name, $channel);
-    }
-
-    /**
-     * @return QueueObjectBuilder
-     */
-    protected function getQueueBuilder()
-    {
-        return new QueueObjectBuilder($this->config->getQueues());
-    }
-
-    /**
-     * Put message into queue
-     * @param Message $message
-     * @return bool
-     */
-    public function push(Message $message)
-    {
-        $this->ensureIsConnected();
-        $routeName = $message->getRoute();
-        $route = $this->buildRouteObject($routeName, $this->channel);
-        return $route->getExchange()->push($message);
-    }
-
-    /**
      * @param string $routeName
      * @param Channel $channel
      * @return Route
      */
     protected function buildRouteObject(string $routeName, Channel $channel)
     {
-        return $this->getRouteBuilder()->create($routeName, $channel);
+        return $this->routeBuilder->create($routeName, $channel);
     }
 
     /**
-     * @return RouteObjectBuilder
+     * Get message from queue
+     * @param string $queueName
+     * @param bool|false $autoAck
+     * @return Output|null
      */
-    protected function getRouteBuilder()
+    public function pull(string $queueName, $autoAck = false)
     {
-        return new RouteObjectBuilder();
+        Assert::boolean($autoAck, __METHOD__ . ' error: $autoAck must be boolean, got ' . gettype($autoAck));
+        $this->ensureIsConnected();
+        $queue = $this->getQueue($queueName, $this->channel);
+        return $queue->pull($autoAck);
+    }
+
+    /**
+     * @param string $name
+     * @param Channel $channel
+     * @return Queue
+     */
+    protected function getQueue(string $name, Channel $channel)
+    {
+        return $this->queueBuilder->create($name, $channel);
     }
 
     /**

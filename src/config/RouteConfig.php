@@ -16,7 +16,7 @@ class RouteConfig
     /**
      *
      */
-    const SOURCE_EXCHANGES = 'sourceExchanges';
+    const SOURCE_EXCHANGE = 'sourceExchange';
     /**
      *
      */

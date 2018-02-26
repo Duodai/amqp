@@ -25,17 +25,31 @@ class RouteObjectBuilder
     protected $config;
 
     /**
+     * @var ExchangeObjectBuilder
+     */
+    protected $exchangeBuilder;
+
+    /**
+     * @var QueueObjectBuilder
+     */
+    protected $queueBuilder;
+
+    /**
      * RouteObjectBuilder constructor.
      * @param RouteConfig $config
+     * @param ExchangeObjectBuilder $exchangeBuilder
+     * @param QueueObjectBuilder $queueBuilder
+     *
      */
-    public function __construct(RouteConfig $config)
+    public function __construct(RouteConfig $config, ExchangeObjectBuilder $exchangeBuilder, QueueObjectBuilder $queueBuilder)
     {
         $this->config = $config;
+        $this->exchangeBuilder = $exchangeBuilder;
+        $this->queueBuilder = $queueBuilder;
     }
 
     /**
      * Construct Route object
-     *
      * @param string $route
      * @param Channel $channel
      * @return Route
@@ -45,32 +59,81 @@ class RouteObjectBuilder
     {
         // Get current route config
         $config = $this->config->getRouteConfig($route);
+        if (empty($config[RouteConfig::SOURCE_EXCHANGE])) {
+            throw new AmqpException(__METHOD__ . ' error: Route config must contain source exchange');
+        }
+        $sourceExchange = $this->declareSourceExchange($config[RouteConfig::SOURCE_EXCHANGE], $channel);
         // Declare exchanges to avoid pushing to non-existent exchanges
-        $exchanges = $this->declareExchanges($config, $channel);
+        $exchangeNames = $config[RouteConfig::DESTINATION_EXCHANGES] ?? [];
+        $exchanges = $this->declareExchanges($exchangeNames, $channel);
         // Declare queues to avoid routing message to nowhere because of not yet declared queues
-        $queues = $this->declareQueues($config, $channel);
+        $queueNames = $config[RouteConfig::DESTINATION_QUEUES] ?? [];
+        $queues = $this->declareQueues($queueNames, $channel);
         // Declare binds between route nodes
-        $this->declareBinds($exchanges, $queues, $route);
+        $this->declareBinds($sourceExchange, $exchanges, $queues, $route);
         $mainExchange = array_shift($exchanges);
         return new Route($mainExchange, $route);
     }
 
     /**
-     * @param array $config
+     * @param string $exchangeName
+     * @param Channel $channel
+     * @return Exchange
+     */
+    protected function declareSourceExchange(string $exchangeName, Channel $channel)
+    {
+        return $this->exchangeBuilder->create($exchangeName, $channel);
+    }
+
+    /**
+     * @param array $exchangeNames
      * @param Channel $channel
      * @return mixed
      * @throws AmqpException
      */
-    protected function declareExchanges(array $config, Channel $channel)
+    protected function declareExchanges(array $exchangeNames, Channel $channel)
     {
-        $exchanges = $config[RouteConfig::SOURCE_EXCHANGES];
-        if (is_null($exchanges)) {
-            throw new AmqpException(__CLASS__ . '::' . __FUNCTION__ . ' error: Route config must contain at least one exchange');
+        foreach ($exchangeNames as $exchange) {
+            $exchanges[] = $this->exchangeBuilder->create($exchange, $channel);
         }
-        foreach ($exchanges as &$exchange) {
-            $exchange = $this->getExchange($this->getExchangeName($exchange), $channel);
+        return $exchanges ?? [];
+    }
+
+    /**
+     * @param array $queueNames
+     * @param Channel $channel
+     * @return mixed
+     * @throws AmqpException
+     */
+    protected function declareQueues(array $queueNames, Channel $channel)
+    {
+        foreach ($queueNames as $queue) {
+            $queueObjects[] = $this->queueBuilder->create($queue, $channel);
         }
-        return $exchanges;
+        return $queueObjects ?? [];
+    }
+
+    /**
+     * @param Exchange $sourceExchange
+     * @param Exchange[] $exchanges
+     * @param Queue[] $queues
+     * @param string $routingKey
+     */
+    protected function declareBinds(Exchange $sourceExchange, array $exchanges, array $queues, string $routingKey)
+    {
+        /** @var Exchange $lastExchange */
+        $lastExchange = null;
+        if (!empty($exchanges)) {
+            foreach ($exchanges as $exchange) {
+                $exchange->bind($sourceExchange->getName(), $routingKey);
+            }
+        }
+        // Bing queues(if any). All queues are bound to last exchange in chain
+        if (!empty($queues)) {
+            foreach ($queues as $queue) {
+                $queue->bind($sourceExchange->getName(), $routingKey);
+            }
+        }
     }
 
     /**
@@ -80,74 +143,6 @@ class RouteObjectBuilder
      */
     protected function getExchange(string $name, Channel $channel)
     {
-        return $this->getExchangeObjectBuilder()->create($name, $channel);
-    }
-
-    /**
-     * @return ExchangeObjectBuilder
-     */
-    protected function getExchangeObjectBuilder()
-    {
-        return new ExchangeObjectBuilder();
-    }
-
-
-    /**
-     * @param RouteConfig $config
-     * @param Channel $channel
-     * @return mixed
-     * @throws AmqpException
-     */
-    protected function declareQueues(RouteConfig $config, Channel $channel)
-    {
-        $queues = $config->getParam($config::QUEUES);
-
-        foreach ($queues as &$queue) {
-            $queue = $this->getQueue($this->getQueueName($queue), $channel);
-        }
-        return $queues;
-    }
-
-    /**
-     * @param QueueName $name
-     * @param Channel $channel
-     * @return Queue
-     */
-    protected function getQueue(QueueName $name, Channel $channel)
-    {
-        return $this->getQueueObjectBuilder()->create($name, $channel);
-    }
-
-    /**
-     * @return QueueObjectBuilder
-     */
-    protected function getQueueObjectBuilder()
-    {
-        return new QueueObjectBuilder();
-    }
-
-    /**
-     * @param Exchange[] $exchanges
-     * @param Queue[] $queues
-     * @param string $routingKey
-     */
-    protected function declareBinds(array $exchanges, array $queues = [], string $routingKey)
-    {
-        /** @var Exchange $lastExchange */
-        $lastExchange = null;
-        // Bind exchanges. Exchanges are bound into a chain, in same order as they are in config
-        // Does not support binding multiple exchanges to a fanout(approved at discussion)
-        foreach ($exchanges as $exchange) {
-            if (!is_null($lastExchange)) {
-                $exchange->bind($exchange->getName(), $routingKey);
-            }
-            $lastExchange = $exchange;
-        }
-        // Bing queues(if any). All queues are bound to last exchange in chain
-        if (!empty($queues)) {
-            foreach ($queues as $queue) {
-                $queue->bind($lastExchange->getName(), $routingKey);
-            }
-        }
+        return $this->exchangeBuilder->create($name, $channel);
     }
 }

@@ -33,6 +33,7 @@ class SettingsConfig
      * @var bool
      */
     protected $shuffleConnections;
+
     /**
      * @param array $config
      */

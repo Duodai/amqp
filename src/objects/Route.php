@@ -3,11 +3,8 @@
 
 namespace Duodai\Amqp\objects;
 
-use Duodai\Amqp\base\RouteName;
-
 /**
  * Class Route
- * @author Michael Janus <mailto:abyssal@mail.ru>
  */
 class Route
 {

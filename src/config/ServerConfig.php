@@ -29,17 +29,6 @@ class ServerConfig
     protected $config;
 
     /**
-     * @return array
-     */
-    protected function requiredParams()
-    {
-        return [
-            self::HOST,
-            self::PORT
-        ];
-    }
-
-    /**
      * @param array $config
      * @throws AmqpException
      */
@@ -48,7 +37,7 @@ class ServerConfig
         $required = $this->requiredParams();
         foreach ($required as $param) {
             if (empty($config[$param])) {
-                throw new AmqpException("Amqp configuration error: Required param {$param} not defined");
+                throw new AmqpException("Amqp configuration error: Required param {$param} is not defined");
             }
         }
         $this->config = $config;
@@ -76,22 +65,81 @@ class ServerConfig
         if (isset($config[self::CONNECT_TIMEOUT])) {
             $this->validateConnectTimeout($config[self::CONNECT_TIMEOUT]);
         }
-        if (isset($config[self::CONNECT_TRIES_LIMIT])) {
-            $this->validateConnectTriesLimit($config[self::CONNECT_TRIES_LIMIT]);
-        }
     }
 
     /**
-     * @param string $param
-     * @return mixed
+     * @return array
      */
-    protected function getParam(string $param)
+    protected function requiredParams()
     {
-        $config = $this->config;
-        if (!isset($config[$param])) {
-            return null;
-        }
-        return $config[$param];
+        return [
+            self::HOST,
+            self::PORT
+        ];
+    }
+
+    /**
+     * @param string $host
+     */
+    protected function validateHost(string $host): void
+    {
+        Assert::minLength($host, 1, "Host can't be an empty string");
+    }
+
+    /**
+     * @param int $port
+     */
+    protected function validatePort(int $port): void
+    {
+        Assert::greaterThan($port, 0, "Port must be greater than 0");
+    }
+
+    /**
+     * @param string $login
+     */
+    protected function validateLogin(string $login): void
+    {
+        Assert::minLength($login, 1, "Login can't be an empty string");
+    }
+
+    /**
+     * @param string $password
+     */
+    protected function validatePassword(string $password): void
+    {
+        // No additional validation required
+    }
+
+    /**
+     * @param string $vhost
+     */
+    protected function validateVirtualHost(string $vhost): void
+    {
+        Assert::minLength($vhost, 1, "Virtual host can't be an empty string");
+    }
+
+    /**
+     * @param int $timeout
+     */
+    protected function validateReadTimeout(int $timeout): void
+    {
+        Assert::greaterThan($timeout, 0, 'Read timeout must be greater than 0');
+    }
+
+    /**
+     * @param int $timeout
+     */
+    protected function validateWriteTimeout(int $timeout): void
+    {
+        Assert::greaterThan($timeout, 0, 'Write timeout must be greater than 0');
+    }
+
+    /**
+     * @param int $timeout
+     */
+    protected function validateConnectTimeout(int $timeout): void
+    {
+        Assert::greaterThan($timeout, 0, 'Connect timeout must be greater than 0');
     }
 
     /**
@@ -108,6 +156,19 @@ class ServerConfig
     public function getHost(): string
     {
         return $this->getParam(self::HOST);
+    }
+
+    /**
+     * @param string $param
+     * @return mixed
+     */
+    protected function getParam(string $param)
+    {
+        $config = $this->config;
+        if (!isset($config[$param])) {
+            return null;
+        }
+        return $config[$param];
     }
 
     /**
@@ -164,80 +225,6 @@ class ServerConfig
     public function getConnectTimeout(): int
     {
         return $this->getParam(self::CONNECT_TIMEOUT) ?? self::DEFAULT_CONNECT_TIMEOUT;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxConnectTries(): int
-    {
-        return $this->getParam(self::CONNECT_TRIES_LIMIT) ?? self::DEFAULT_CONNECT_TRIES_LIMIT;
-    }
-
-
-    /**
-     * @param string $host
-     */
-    protected function validateHost(string $host): void
-    {
-        Assert::minLength($host, 1, "Host can't be an empty string");
-    }
-
-    /**
-     * @param int $port
-     */
-    protected function validatePort(int $port): void
-    {
-        Assert::greaterThan($port, 0, "Port must be greater than 0");
-    }
-
-    /**
-     * @param string $login
-     */
-    protected function validateLogin(string $login): void
-    {
-        Assert::minLength($login, 1, "Login can't be an empty string");
-    }
-
-    /**
-     * @param string $password
-     */
-    protected function validatePassword(string $password): void
-    {
-        $this->password = $password;
-    }
-
-    /**
-     * @param string $vhost
-     */
-    protected function validateVirtualHost(string $vhost): void
-    {
-        Assert::minLength($vhost, 1, "Virtual host can't be an empty string");
-    }
-
-    /**
-     * @param int $timeout
-     */
-    protected function validateReadTimeout(int $timeout): void
-    {
-        Assert::greaterThan($timeout, 0, 'Read timeout must be greater than 0');
-    }
-
-    /**
-     * @param int $timeout
-     */
-    protected function validateWriteTimeout(int $timeout): void
-    {
-        Assert::greaterThan($timeout, 0, 'Write timeout must be greater than 0');
-        $this->writeTimeout = $timeout;
-    }
-
-    /**
-     * @param int $timeout
-     */
-    protected function validateConnectTimeout(int $timeout): void
-    {
-        Assert::greaterThan($timeout, 0, 'Connect timeout must be greater than 0');
     }
 
     /**

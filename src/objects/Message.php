@@ -3,9 +3,9 @@
 
 namespace Duodai\Amqp\objects;
 
-use Duodai\Amqp\exceptions\AmqpException;
 use Duodai\Amqp\dictionaries\MessageAttribute;
 use Duodai\Amqp\dictionaries\MessageFlag;
+use Duodai\Amqp\exceptions\AmqpException;
 
 /**
  * Class Message
