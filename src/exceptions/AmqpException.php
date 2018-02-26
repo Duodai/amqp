@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Duodai\Amqp\exceptions;
+namespace duodai\amqp\exceptions;
 
 /**
  * Class AmqpException

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Duodai\Amqp\config;
+namespace duodai\amqp\config;
 
 
 class SettingsConfig

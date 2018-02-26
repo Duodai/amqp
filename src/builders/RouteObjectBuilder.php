@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Duodai\Amqp\builders;
+namespace duodai\amqp\builders;
 
-use Duodai\Amqp\config\RouteConfig;
-use Duodai\Amqp\exceptions\AmqpException;
-use Duodai\Amqp\objects\Channel;
-use Duodai\Amqp\objects\Exchange;
-use Duodai\Amqp\objects\Queue;
-use Duodai\Amqp\objects\Route;
+use duodai\amqp\config\RouteConfig;
+use duodai\amqp\exceptions\AmqpException;
+use duodai\amqp\objects\Channel;
+use duodai\amqp\objects\Exchange;
+use duodai\amqp\objects\Queue;
+use duodai\amqp\objects\Route;
 
 
 /**

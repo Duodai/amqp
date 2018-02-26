@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Duodai\Amqp\builders;
+namespace duodai\amqp\builders;
 
-use Duodai\Amqp\config\ExchangeConfig;
-use Duodai\Amqp\dictionaries\ExchangeFlag;
-use Duodai\Amqp\dictionaries\ExchangeType;
-use Duodai\Amqp\exceptions\AmqpException;
-use Duodai\Amqp\objects\Channel;
-use Duodai\Amqp\objects\Exchange;
+use duodai\amqp\config\ExchangeConfig;
+use duodai\amqp\dictionaries\ExchangeFlag;
+use duodai\amqp\dictionaries\ExchangeType;
+use duodai\amqp\exceptions\AmqpException;
+use duodai\amqp\objects\Channel;
+use duodai\amqp\objects\Exchange;
 
 /**
  * Class ExchangeObjectBuilder

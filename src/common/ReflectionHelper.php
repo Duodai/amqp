@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Duodai\Amqp\common;
+namespace duodai\amqp\common;
 
 /**
  * Helper to simplify usage of ReflectionClass

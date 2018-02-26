@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Duodai\Amqp\objects;
+namespace duodai\amqp\objects;
 
 
-use Duodai\Amqp\dictionaries\ExchangeFlag;
-use Duodai\Amqp\dictionaries\ExchangeType;
-use Duodai\Amqp\exceptions\AmqpException;
+use duodai\amqp\dictionaries\ExchangeFlag;
+use duodai\amqp\dictionaries\ExchangeType;
+use duodai\amqp\exceptions\AmqpException;
 
 /**
  * Class Exchange

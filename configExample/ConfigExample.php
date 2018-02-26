@@ -12,8 +12,8 @@ use duodai\amqp\dictionaries\QueueFlag;
 return [
     Config::SERVERS_OPTION => [
         'server1' => [
-            ServerConfig::HOST => 'rabbit.example.com',
-            ServerConfig::PORT => 5673,
+            ServerConfig::HOST => '127.0.0.1',
+            ServerConfig::PORT => 5672,
             ServerConfig::LOGIN => 'user',
             ServerConfig::PASSWORD => 'pwd'
         ],
@@ -37,7 +37,7 @@ return [
     ],
     Config::ROUTES_OPTION => [
         'default_default' => [
-            RouteConfig::SOURCE_EXCHANGES => [
+            RouteConfig::SOURCE_EXCHANGE => [
                 'default',
             ],
             RouteConfig::DESTINATION_QUEUES => [

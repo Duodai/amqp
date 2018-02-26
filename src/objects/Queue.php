@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Duodai\Amqp\objects;
+namespace duodai\amqp\objects;
 
-use Duodai\Amqp\dictionaries\QueueFlag;
-use Duodai\Amqp\exceptions\AmqpException;
+use duodai\amqp\dictionaries\QueueFlag;
+use duodai\amqp\exceptions\AmqpException;
 
 /**
  * Class Queue

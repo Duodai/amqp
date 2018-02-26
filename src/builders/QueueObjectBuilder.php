@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Duodai\Amqp\builders;
+namespace duodai\amqp\builders;
 
-use Duodai\Amqp\config\QueueConfig;
-use Duodai\Amqp\dictionaries\QueueFlag;
-use Duodai\Amqp\objects\Channel;
-use Duodai\Amqp\objects\Queue;
+use duodai\amqp\config\QueueConfig;
+use duodai\amqp\dictionaries\QueueFlag;
+use duodai\amqp\objects\Channel;
+use duodai\amqp\objects\Queue;
 
 /**
  * Class QueueObjectBuilder

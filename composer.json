@@ -21,8 +21,8 @@
   "require-dev": {
   },
   "autoload": {
-    "psr-0": {
-      "Duodai\\Amqp": "src/"
+    "psr-4": {
+      "duodai\\amqp\\": "src/"
     }
   }
 }

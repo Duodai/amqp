@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Duodai\Amqp\config;
+namespace duodai\amqp\config;
 
-use Duodai\Amqp\exceptions\AmqpException;
+use duodai\amqp\exceptions\AmqpException;
 
 /**
  * Class QueueConfig

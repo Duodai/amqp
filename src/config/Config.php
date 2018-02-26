@@ -1,8 +1,8 @@
 <?php
 
-namespace Duodai\Amqp\config;
+namespace duodai\amqp\config;
 
-use Duodai\Amqp\exceptions\AmqpException;
+use duodai\amqp\exceptions\AmqpException;
 
 class Config
 {
@@ -68,7 +68,7 @@ class Config
      */
     public function getServers(): array
     {
-        return $this->servers;
+        return array_values($this->servers);
     }
 
     /**

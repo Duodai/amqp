@@ -1,22 +1,22 @@
 <?php
 
-namespace Duodai\Amqp;
+namespace duodai\amqp;
 
-use Duodai\Amqp\builders\ExchangeObjectBuilder;
-use Duodai\Amqp\builders\QueueObjectBuilder;
-use Duodai\Amqp\builders\RouteObjectBuilder;
-use Duodai\Amqp\config\Config;
-use Duodai\Amqp\config\ExchangeConfig;
-use Duodai\Amqp\config\QueueConfig;
-use Duodai\Amqp\config\RouteConfig;
-use Duodai\Amqp\config\ServerConfig;
-use Duodai\Amqp\exceptions\AmqpException;
-use Duodai\Amqp\objects\Channel;
-use Duodai\Amqp\objects\Connection;
-use Duodai\Amqp\objects\Message;
-use Duodai\Amqp\objects\Output;
-use Duodai\Amqp\objects\Queue;
-use Duodai\Amqp\objects\Route;
+use duodai\amqp\builders\ExchangeObjectBuilder;
+use duodai\amqp\builders\QueueObjectBuilder;
+use duodai\amqp\builders\RouteObjectBuilder;
+use duodai\amqp\config\Config;
+use duodai\amqp\config\ExchangeConfig;
+use duodai\amqp\config\QueueConfig;
+use duodai\amqp\config\RouteConfig;
+use duodai\amqp\config\ServerConfig;
+use duodai\amqp\exceptions\AmqpException;
+use duodai\amqp\objects\Channel;
+use duodai\amqp\objects\Connection;
+use duodai\amqp\objects\Message;
+use duodai\amqp\objects\Output;
+use duodai\amqp\objects\Queue;
+use duodai\amqp\objects\Route;
 use Webmozart\Assert\Assert;
 
 /**
