@@ -3,14 +3,14 @@
 
 namespace duodai\amqp\dictionaries;
 
-use duodai\amqp\common\Enum;
+use duodai\amqp\common\DictNoReflection;
 
 /**
  * Class QueueFlag
  * Queue declaration flags
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
-class QueueFlag extends Enum
+class QueueFlag extends DictNoReflection
 {
     /**
      *
@@ -28,4 +28,17 @@ class QueueFlag extends Enum
      *
      */
     const FLAG_AUTODELETE = AMQP_AUTODELETE;
+
+    /**
+     * @return array
+     */
+    protected function getValueList(): array
+    {
+        return [
+            self::FLAG_DURABLE,
+            self::FLAG_PASSIVE,
+            self::FLAG_EXCLUSIVE,
+            self::FLAG_AUTODELETE
+        ];
+    }
 }

@@ -3,14 +3,14 @@
 
 namespace duodai\amqp\dictionaries;
 
-use duodai\amqp\common\Enum;
+use duodai\amqp\common\DictNoReflection;
 
 /**
  * Class ExchangeFlag
  * List of exchange flags
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
-class ExchangeFlag extends Enum
+class ExchangeFlag extends DictNoReflection
 {
     /**
      * Persistent exchange declaration
@@ -21,4 +21,15 @@ class ExchangeFlag extends Enum
      *
      */
     const FLAG_PASSIVE = AMQP_PASSIVE;
+
+    /**
+     * @return array
+     */
+    protected function getValueList(): array
+    {
+       return [
+           self::FLAG_DURABLE,
+           self::FLAG_PASSIVE
+       ];
+    }
 }

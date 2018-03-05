@@ -4,11 +4,12 @@
 namespace duodai\amqp\common;
 
 /**
- * Class Enum
+ * Class Dict
  * Base class for constant value lists
+ * Significantly faster than reflection-based realisation but requires value list hard-coding
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
-abstract class Enum
+abstract class DictNoReflection
 {
     /**
      * Current value
@@ -23,7 +24,7 @@ abstract class Enum
      */
     final public function __construct($value)
     {
-        if (ReflectionHelper::isClassConstantValue($value, $this)) {
+        if (in_array($value, $this->getValueList())) {
             $this->value = $value;
         } else {
             throw new \InvalidArgumentException($this->errorMessage($value));
@@ -52,4 +53,10 @@ abstract class Enum
     {
         return $this->value;
     }
+
+    /**
+     * List constants here for argument validation.
+     * @return array
+     */
+    abstract protected function getValueList():array;
 }

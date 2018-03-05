@@ -3,14 +3,14 @@
 
 namespace duodai\amqp\dictionaries;
 
-use duodai\amqp\common\Enum;
+use duodai\amqp\common\DictNoReflection;
 
 /**
  * Class ExchangeType
  * Exchange types list
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
-class ExchangeType extends Enum
+class ExchangeType extends DictNoReflection
 {
     /**
      *
@@ -28,4 +28,17 @@ class ExchangeType extends Enum
      *
      */
     const TYPE_HEADERS = AMQP_EX_TYPE_HEADERS;
+
+    /**
+     * @return array
+     */
+    protected function getValueList(): array
+    {
+        return [
+            self::TYPE_DIRECT,
+            self::TYPE_FANOUT,
+            self::TYPE_TOPIC,
+            self::TYPE_HEADERS
+        ];
+    }
 }

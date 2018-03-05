@@ -3,14 +3,14 @@
 
 namespace duodai\amqp\dictionaries;
 
-use duodai\amqp\common\Enum;
+use duodai\amqp\common\DictNoReflection;
 
 /**
  * Class MessageAttribute
  * Message attributes
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
-class MessageAttribute extends Enum
+class MessageAttribute extends DictNoReflection
 {
 
     /**
@@ -22,4 +22,14 @@ class MessageAttribute extends Enum
      */
     const DELIVERY_MODE_NON_PERSISTENT = ['delivery_mode' => 1];
 
+    /**
+     * @return array
+     */
+    protected function getValueList(): array
+    {
+        return [
+            self::DELIVERY_MODE_PERSISTENT,
+            self::DELIVERY_MODE_NON_PERSISTENT
+        ];
+    }
 }

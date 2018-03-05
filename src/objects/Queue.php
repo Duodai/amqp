@@ -103,6 +103,24 @@ class Queue
     }
 
     /**
+     * @param callable $callback
+     * @param string $consumerTag Any string to identify
+     * @param bool $autoAck
+     */
+    public function consume(Callable $callback, string $consumerTag, $autoAck = false)
+    {
+        $this->component->consume($callback, $autoAck ? self::FLAG_AUTO_ACK : AMQP_NOPARAM, $consumerTag);
+    }
+
+    /**
+     * @param string $consumerTag
+     */
+    public function cancel(string $consumerTag)
+    {
+        $this->component->cancel($consumerTag);
+    }
+
+    /**
      * @param Output $output
      * @return bool
      */

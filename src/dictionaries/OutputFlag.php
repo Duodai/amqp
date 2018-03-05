@@ -3,14 +3,14 @@
 
 namespace duodai\amqp\dictionaries;
 
-use duodai\amqp\common\Enum;
+use duodai\amqp\common\DictNoReflection;
 
 /**
  * Class OutputFlag
  * Flags for ack/nack
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
-class OutputFlag extends Enum
+class OutputFlag extends DictNoReflection
 {
     /**
      * Requeue message
@@ -20,4 +20,15 @@ class OutputFlag extends Enum
      * Ack all unacked
      */
     const FLAG_MULTIPLE = AMQP_MULTIPLE;
+
+    /**
+     * @return array
+     */
+    protected function getValueList(): array
+    {
+        return [
+            self::FLAG_REQUEUE,
+            self::FLAG_MULTIPLE
+        ];
+    }
 }
