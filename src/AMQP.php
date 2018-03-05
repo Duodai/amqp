@@ -17,6 +17,6 @@ use AmqpTrait;
     public function __construct(array $config)
     {
         $config = new Config($config);
-        $this->init($config);
+        $this->initClient($config);
     }
 }

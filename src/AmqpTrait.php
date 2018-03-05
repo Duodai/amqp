@@ -11,7 +11,6 @@ use duodai\amqp\config\QueueConfig;
 use duodai\amqp\config\RouteConfig;
 use duodai\amqp\config\ServerConfig;
 use duodai\amqp\exceptions\AmqpException;
-use duodai\amqp\objects\Callback;
 use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Connection;
 use duodai\amqp\objects\Message;
@@ -56,7 +55,7 @@ trait AmqpTrait
     /**
      * @param Config $config
      */
-    protected function init(Config $config)
+    protected function initClient(Config $config)
     {
         $this->config = $config;
         $this->connections = $this->initConnections(...$this->config->getServers());
