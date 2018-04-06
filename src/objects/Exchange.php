@@ -40,13 +40,17 @@ class Exchange
      * @var string
      */
     protected $name;
-
+    
     /**
+     * Exchange constructor.
      * @param string $name
      * @param ExchangeType $type
      * @param Channel $channel
-     * @param ExchangeFlag[] $flags
+     * @param array $flags
      * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
      */
     public function __construct(string $name, ExchangeType $type, Channel $channel, array $flags = [])
     {
@@ -60,6 +64,8 @@ class Exchange
     /**
      * @param Channel $channel
      * @return \AMQPExchange
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
      */
     protected function createComponent(Channel $channel)
     {
@@ -95,6 +101,9 @@ class Exchange
      * Publish message
      * @param Message $message
      * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
      */
     public function push(Message $message)
     {
@@ -131,6 +140,9 @@ class Exchange
      * @param string $exchangeName
      * @param string $routeName
      * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
      */
     public function bind(string $exchangeName, string $routeName)
     {

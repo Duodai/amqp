@@ -10,9 +10,6 @@ class Config
     const QUEUES_OPTION = 'queues';
     const ROUTES_OPTION = 'routes';
     const SERVERS_OPTION = 'servers';
-    /**
-     *
-     */
     const SETTINGS_OPTION = 'settings';
 
     /**
@@ -31,13 +28,16 @@ class Config
      * @var RouteConfig
      */
     protected $routes;
-
     /**
      * @var SettingsConfig
      */
     protected $settings;
 
-
+    /**
+     * Config constructor.
+     * @param array $config
+     * @throws AmqpException
+     */
     public function __construct(array $config)
     {
         if (empty($config[self::SERVERS_OPTION])) {
@@ -50,7 +50,6 @@ class Config
         $this->queues = new QueueConfig($config[self::QUEUES_OPTION] ?? []);
         $this->routes = new RouteConfig($config[self::ROUTES_OPTION] ?? []);
         $this->settings = new SettingsConfig($config[self::SETTINGS_OPTION] ?? []);
-
     }
 
     /**
@@ -85,7 +84,6 @@ class Config
         return $this->routes;
     }
 
-
     /**
      * @return SettingsConfig|null
      */
@@ -93,6 +91,4 @@ class Config
     {
         return $this->settings;
     }
-
-
 }

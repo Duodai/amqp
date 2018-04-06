@@ -21,7 +21,6 @@ class ExchangeConfig
      */
     protected $config;
 
-
     /**
      * @param array $config
      */
@@ -44,11 +43,17 @@ class ExchangeConfig
         return $config[$exchange];
     }
 
+    /**
+     * @return array
+     */
     public function getConfig()
     {
         return $this->config;
     }
 
+    /**
+     * @return array
+     */
     public function getList()
     {
         return array_keys($this->config);

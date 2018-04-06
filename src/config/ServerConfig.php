@@ -234,5 +234,4 @@ class ServerConfig
     {
         Assert::greaterThan($tries, 0, 'Connect tries limit must be greater than 0');
     }
-
 }

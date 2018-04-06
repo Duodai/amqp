@@ -5,6 +5,7 @@ namespace duodai\amqp\builders;
 
 use duodai\amqp\config\QueueConfig;
 use duodai\amqp\dictionaries\QueueFlag;
+use duodai\amqp\exceptions\AmqpException;
 use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Queue;
 
@@ -34,6 +35,10 @@ class QueueObjectBuilder
      * @param string $name
      * @param Channel $channel
      * @return Queue
+     * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPQueueException
      */
     public function create(string $name, Channel $channel)
     {

@@ -20,7 +20,7 @@ abstract class DictNoReflection
 
     /**
      * @param $value
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     final public function __construct($value)
     {
@@ -31,6 +31,10 @@ abstract class DictNoReflection
         }
     }
 
+    /**
+     * @param $value
+     * @return string
+     */
     protected function errorMessage($value)
     {
         return get_called_class() . ' error: trying to instantiate class with an invalid value ' . is_scalar($value) ? $value : gettype($value) . '. Use class constants';
@@ -38,6 +42,7 @@ abstract class DictNoReflection
 
     /**
      * @return array
+     * @throws \ReflectionException
      */
     public static function constants()
     {

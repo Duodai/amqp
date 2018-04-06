@@ -38,7 +38,6 @@ trait AmqpTrait
      * @var Channel
      */
     protected $channel;
-
     /**
      * @var QueueObjectBuilder
      */
@@ -127,6 +126,11 @@ trait AmqpTrait
      * Put message into queue
      * @param Message $message
      * @return bool
+     * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
+     * @throws \AMQPQueueException
      */
     public function push(Message $message)
     {
@@ -138,6 +142,8 @@ trait AmqpTrait
 
     /**
      * Reconnect if not connected
+     * @throws AmqpException
+     * @throws \AMQPConnectionException
      */
     protected function ensureIsConnected()
     {
@@ -148,6 +154,7 @@ trait AmqpTrait
 
     /**
      * @throws AmqpException
+     * @throws \AMQPConnectionException
      */
     protected function connect()
     {
@@ -158,6 +165,7 @@ trait AmqpTrait
     /**
      * @return Connection
      * @throws AmqpException
+     * @throws \AMQPConnectionException
      */
     protected function getAccessibleConnection()
     {
@@ -184,6 +192,7 @@ trait AmqpTrait
     /**
      * @param Connection $connection
      * @return Channel
+     * @throws \AMQPConnectionException
      */
     protected function createChannel(Connection $connection)
     {
@@ -194,6 +203,11 @@ trait AmqpTrait
      * @param string $routeName
      * @param Channel $channel
      * @return Route
+     * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
+     * @throws \AMQPQueueException
      */
     protected function buildRouteObject(string $routeName, Channel $channel)
     {
@@ -201,10 +215,13 @@ trait AmqpTrait
     }
 
     /**
-     * Get message from queue
      * @param string $queueName
-     * @param bool|false $autoAck
+     * @param bool $autoAck
      * @return Output|null
+     * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPQueueException
      */
     public function pull(string $queueName, $autoAck = false)
     {
@@ -218,6 +235,10 @@ trait AmqpTrait
      * @param string $name
      * @param Channel $channel
      * @return Queue
+     * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPQueueException
      */
     protected function getQueue(string $name, Channel $channel)
     {
@@ -228,6 +249,9 @@ trait AmqpTrait
      * Confirm message removal
      * @param Output $output
      * @return bool
+     * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function ack(Output $output)
     {
@@ -239,6 +263,9 @@ trait AmqpTrait
      * Return message to queue
      * @param Output $output
      * @return bool
+     * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function nack(Output $output)
     {
@@ -248,9 +275,10 @@ trait AmqpTrait
 
     /**
      * Generate new Message object
-     * @param string $data
+     * @param $data
      * @param string $route
      * @return Message
+     * @throws AmqpException
      */
     public function createMessage($data, string $route)
     {

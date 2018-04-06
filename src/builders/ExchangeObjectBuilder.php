@@ -37,6 +37,9 @@ class ExchangeObjectBuilder
      * @param Channel $channel
      * @return Exchange
      * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
      */
     public function create(string $name, Channel $channel)
     {

@@ -14,6 +14,11 @@ class AMQP
 {
 use AmqpTrait;
 
+    /**
+     * AMQP constructor.
+     * @param array $config
+     * @throws exceptions\AmqpException
+     */
     public function __construct(array $config)
     {
         $config = new Config($config);

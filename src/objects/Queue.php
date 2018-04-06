@@ -40,12 +40,15 @@ class Queue
      */
     protected $component;
 
-
     /**
+     * Queue constructor.
      * @param string $name
      * @param Channel $channel
-     * @param QueueFlag[] $flags
+     * @param array $flags
      * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPQueueException
      */
     public function __construct(string $name, Channel $channel, array $flags = [])
     {
@@ -58,6 +61,8 @@ class Queue
     /**
      * @param Channel $channel
      * @return \AMQPQueue
+     * @throws \AMQPConnectionException
+     * @throws \AMQPQueueException
      */
     protected function createComponent(Channel $channel)
     {
@@ -92,6 +97,8 @@ class Queue
     /**
      * @param bool $autoAck
      * @return Output|null
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function pull($autoAck = false)
     {
@@ -104,8 +111,10 @@ class Queue
 
     /**
      * @param callable $callback
-     * @param string $consumerTag Any string to identify
+     * @param string $consumerTag
      * @param bool $autoAck
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function consume(Callable $callback, string $consumerTag, $autoAck = false)
     {
@@ -114,6 +123,8 @@ class Queue
 
     /**
      * @param string $consumerTag
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function cancel(string $consumerTag)
     {
@@ -123,6 +134,8 @@ class Queue
     /**
      * @param Output $output
      * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function ack(Output $output)
     {
@@ -134,6 +147,8 @@ class Queue
     /**
      * @param Output $output
      * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function nack(Output $output)
     {
@@ -146,6 +161,8 @@ class Queue
      * @param string $exchangeName
      * @param string $routeName
      * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function bind(string $exchangeName, string $routeName)
     {

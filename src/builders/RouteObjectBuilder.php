@@ -7,9 +7,7 @@ use duodai\amqp\config\RouteConfig;
 use duodai\amqp\exceptions\AmqpException;
 use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Exchange;
-use duodai\amqp\objects\Queue;
 use duodai\amqp\objects\Route;
-
 
 /**
  * Class RouteObjectBuilder
@@ -49,11 +47,14 @@ class RouteObjectBuilder
     }
 
     /**
-     * Construct Route object
      * @param string $route
      * @param Channel $channel
      * @return Route
      * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
+     * @throws \AMQPQueueException
      */
     public function create(string $route, Channel $channel)
     {
@@ -78,6 +79,10 @@ class RouteObjectBuilder
      * @param string $exchangeName
      * @param Channel $channel
      * @return Exchange
+     * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
      */
     protected function declareSourceExchange(string $exchangeName, Channel $channel)
     {
@@ -87,8 +92,11 @@ class RouteObjectBuilder
     /**
      * @param array $exchangeNames
      * @param Channel $channel
-     * @return mixed
+     * @return array
      * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
      */
     protected function declareExchanges(array $exchangeNames, Channel $channel)
     {
@@ -101,8 +109,11 @@ class RouteObjectBuilder
     /**
      * @param array $queueNames
      * @param Channel $channel
-     * @return mixed
+     * @return array
      * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPQueueException
      */
     protected function declareQueues(array $queueNames, Channel $channel)
     {
@@ -114,8 +125,8 @@ class RouteObjectBuilder
 
     /**
      * @param Exchange $sourceExchange
-     * @param Exchange[] $exchanges
-     * @param Queue[] $queues
+     * @param array $exchanges
+     * @param array $queues
      * @param string $routingKey
      */
     protected function declareBinds(Exchange $sourceExchange, array $exchanges, array $queues, string $routingKey)
@@ -139,6 +150,10 @@ class RouteObjectBuilder
      * @param string $name
      * @param Channel $channel
      * @return Exchange
+     * @throws AmqpException
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
      */
     protected function getExchange(string $name, Channel $channel)
     {

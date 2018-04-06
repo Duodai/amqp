@@ -43,6 +43,8 @@ class Output
     /**
      * Confirm successful delivery
      * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function ack()
     {
@@ -52,6 +54,8 @@ class Output
     /**
      * Confirm failed delivery
      * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
      */
     public function nack()
     {

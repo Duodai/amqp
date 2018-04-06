@@ -100,6 +100,4 @@ class SettingsConfig
     {
         return $this->shuffleConnections;
     }
-
-
 }

@@ -54,11 +54,17 @@ class RouteConfig
         return $config[$route];
     }
 
+    /**
+     * @return array
+     */
     public function getConfig()
     {
         return $this->config;
     }
 
+    /**
+     * @return array
+     */
     public function getList()
     {
         return array_keys($this->config);

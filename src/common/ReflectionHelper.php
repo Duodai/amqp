@@ -9,27 +9,26 @@ namespace duodai\amqp\common;
  * @author Michael Janus <abyssal@mail.ru>
  */
 class ReflectionHelper
-{ //TODO Make stand-alone package for helpers and common classes
+{
 
     /**
      * Returns class name without namespace
-     *
-     * @param object $object
+     * @param $object
      * @return string
+     * @throws \ReflectionException
      */
     public static function shortClassName($object)
     {
         $reflection = new \ReflectionClass($object);
         return $reflection->getShortName();
-
     }
 
     /**
      * Check if there is a class constant with given value
-     *
-     * @param mixed $value
-     * @param object $object
+     * @param $value
+     * @param $object
      * @return bool
+     * @throws \ReflectionException
      */
     public static function isClassConstantValue($value, $object)
     {
@@ -38,8 +37,9 @@ class ReflectionHelper
 
     /**
      * Get class constants as a named array
-     * @param object|string $object
+     * @param $object
      * @return array
+     * @throws \ReflectionException
      */
     public static function constants($object)
     {
@@ -49,10 +49,10 @@ class ReflectionHelper
 
     /**
      * Check if there is a class constant with given name
-     *
-     * @param mixed $value
-     * @param object $object
+     * @param $value
+     * @param $object
      * @return bool
+     * @throws \ReflectionException
      */
     public static function isClassConstantName($value, $object)
     {

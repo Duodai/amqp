@@ -12,6 +12,7 @@ class Channel extends \AMQPChannel
 
     /**
      * @param Connection $connection
+     * @throws \AMQPConnectionException
      */
     public function __construct(Connection $connection)
     {
