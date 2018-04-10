@@ -2,9 +2,9 @@
 
 namespace duodai\amqp;
 
-use duodai\amqp\builders\ExchangeObjectBuilder;
-use duodai\amqp\builders\QueueObjectBuilder;
-use duodai\amqp\builders\RouteObjectBuilder;
+use duodai\amqp\builders\ExchangeFactory;
+use duodai\amqp\builders\QueueFactory;
+use duodai\amqp\builders\RouteFactory;
 use duodai\amqp\config\Config;
 use duodai\amqp\config\ExchangeConfig;
 use duodai\amqp\config\QueueConfig;
@@ -39,15 +39,15 @@ trait AmqpTrait
      */
     protected $channel;
     /**
-     * @var QueueObjectBuilder
+     * @var QueueFactory
      */
     protected $queueBuilder;
     /**
-     * @var ExchangeObjectBuilder
+     * @var ExchangeFactory
      */
     protected $exchangeBuilder;
     /**
-     * @var RouteObjectBuilder
+     * @var RouteFactory
      */
     protected $routeBuilder;
 
@@ -91,35 +91,35 @@ trait AmqpTrait
 
     /**
      * @param QueueConfig $config
-     * @return QueueObjectBuilder
+     * @return QueueFactory
      */
     protected function initQueueBuilder(QueueConfig $config)
     {
-        return new QueueObjectBuilder($config);
+        return new QueueFactory($config);
     }
 
     /**
      * @param ExchangeConfig $config
-     * @return ExchangeObjectBuilder
+     * @return ExchangeFactory
      */
     protected function initExchangeBuilder(ExchangeConfig $config)
     {
-        return new ExchangeObjectBuilder($config);
+        return new ExchangeFactory($config);
     }
 
     /**
      * @param RouteConfig $config
-     * @param QueueObjectBuilder $queueBuilder
-     * @param ExchangeObjectBuilder $exchangeBuilder
-     * @return RouteObjectBuilder
+     * @param QueueFactory $queueBuilder
+     * @param ExchangeFactory $exchangeBuilder
+     * @return RouteFactory
      */
     protected function initRouteBuilder(
         RouteConfig $config,
-        QueueObjectBuilder $queueBuilder,
-        ExchangeObjectBuilder $exchangeBuilder
+        QueueFactory $queueBuilder,
+        ExchangeFactory $exchangeBuilder
     )
     {
-        return new RouteObjectBuilder($config, $exchangeBuilder, $queueBuilder);
+        return new RouteFactory($config, $exchangeBuilder, $queueBuilder);
     }
 
     /**

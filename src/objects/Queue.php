@@ -168,4 +168,36 @@ class Queue
     {
         return $this->component->bind($exchangeName, $routeName);
     }
+
+    /**
+     * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     */
+    public function purge() :bool
+    {
+        return $this->component->purge();
+    }
+
+    /**
+     * @param bool $ifUnused If true, queue will only be deleted if no consumers currently use it
+     * @return int Number of deleted messages
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     */
+    public function delete($ifUnused = false):int
+    {
+        return $this->component->delete($ifUnused ? AMQP_IFUNUSED : AMQP_NOPARAM);
+    }
+
+    /**
+     * @param Route $route
+     * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     */
+    public function unbind(Route $route)
+    {
+        return $this->component->unbind($route->getExchange()->getName(), $route->getRoutingKey());
+    }
 }

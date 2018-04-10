@@ -10,11 +10,11 @@ use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Queue;
 
 /**
- * Class QueueObjectBuilder
+ * Class QueueFactory
  * Create Queue object from config
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
-class QueueObjectBuilder
+class QueueFactory
 {
 
     /**
@@ -23,7 +23,7 @@ class QueueObjectBuilder
     protected $config;
 
     /**
-     * QueueObjectBuilder constructor.
+     * QueueFactory constructor.
      * @param QueueConfig $config
      */
     public function __construct(QueueConfig $config)

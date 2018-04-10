@@ -40,7 +40,7 @@ class Exchange
      * @var string
      */
     protected $name;
-    
+
     /**
      * Exchange constructor.
      * @param string $name
@@ -67,7 +67,7 @@ class Exchange
      * @throws \AMQPConnectionException
      * @throws \AMQPExchangeException
      */
-    protected function createComponent(Channel $channel)
+    protected function createComponent(Channel $channel): \AMQPExchange
     {
         return new \AMQPExchange($channel);
     }
@@ -75,7 +75,7 @@ class Exchange
     /**
      * @param ExchangeType $type
      */
-    protected function setType(ExchangeType $type)
+    protected function setType(ExchangeType $type): void
     {
         $this->component->setType($type->val());
     }
@@ -84,7 +84,7 @@ class Exchange
      * @param ExchangeFlag[] $flags
      * @throws AmqpException
      */
-    private function setFlags(array $flags)
+    private function setFlags(array $flags): void
     {
         $flagsBitMask = self::NO_FLAGS;
         foreach ($flags as $flag) {
@@ -105,7 +105,7 @@ class Exchange
      * @throws \AMQPConnectionException
      * @throws \AMQPExchangeException
      */
-    public function push(Message $message)
+    public function push(Message $message): bool
     {
         $result = $this->component->publish(
             $message->getBody(),
@@ -119,7 +119,7 @@ class Exchange
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -129,7 +129,7 @@ class Exchange
      *
      * @param string $name
      */
-    protected function setName(string $name)
+    protected function setName(string $name): void
     {
         $this->name = $name;
         $this->component->setName($name);
@@ -144,8 +144,32 @@ class Exchange
      * @throws \AMQPConnectionException
      * @throws \AMQPExchangeException
      */
-    public function bind(string $exchangeName, string $routeName)
+    public function bind(string $exchangeName, string $routeName): bool
     {
         return $this->component->bind($exchangeName, $routeName);
+    }
+
+    /**
+     * @param Route $route
+     * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
+     */
+    public function unbind(Route $route): bool
+    {
+        return $this->component->unbind($route->getExchange()->getName(), $route->getRoutingKey());
+    }
+
+    /**
+     * @param bool $ifUnused
+     * @return bool
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
+     */
+    public function delete($ifUnused = false): bool
+    {
+        return $this->component->delete($this->getName(), $ifUnused ? AMQP_IFUNUSED : AMQP_NOPARAM);
     }
 }

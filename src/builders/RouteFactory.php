@@ -10,11 +10,11 @@ use duodai\amqp\objects\Exchange;
 use duodai\amqp\objects\Route;
 
 /**
- * Class RouteObjectBuilder
+ * Class RouteFactory
  * Create Route object from config
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
-class RouteObjectBuilder
+class RouteFactory
 {
 
     /**
@@ -23,27 +23,27 @@ class RouteObjectBuilder
     protected $config;
 
     /**
-     * @var ExchangeObjectBuilder
+     * @var ExchangeFactory
      */
-    protected $exchangeBuilder;
+    protected $exchangeFactory;
 
     /**
-     * @var QueueObjectBuilder
+     * @var QueueFactory
      */
-    protected $queueBuilder;
+    protected $queueFactory;
 
     /**
-     * RouteObjectBuilder constructor.
+     * RouteFactory constructor.
      * @param RouteConfig $config
-     * @param ExchangeObjectBuilder $exchangeBuilder
-     * @param QueueObjectBuilder $queueBuilder
+     * @param ExchangeFactory $exchangeBuilder
+     * @param QueueFactory $queueBuilder
      *
      */
-    public function __construct(RouteConfig $config, ExchangeObjectBuilder $exchangeBuilder, QueueObjectBuilder $queueBuilder)
+    public function __construct(RouteConfig $config, ExchangeFactory $exchangeBuilder, QueueFactory $queueBuilder)
     {
         $this->config = $config;
-        $this->exchangeBuilder = $exchangeBuilder;
-        $this->queueBuilder = $queueBuilder;
+        $this->exchangeFactory = $exchangeBuilder;
+        $this->queueFactory = $queueBuilder;
     }
 
     /**
@@ -86,7 +86,7 @@ class RouteObjectBuilder
      */
     protected function declareSourceExchange(string $exchangeName, Channel $channel)
     {
-        return $this->exchangeBuilder->create($exchangeName, $channel);
+        return $this->exchangeFactory->create($exchangeName, $channel);
     }
 
     /**
@@ -101,7 +101,7 @@ class RouteObjectBuilder
     protected function declareExchanges(array $exchangeNames, Channel $channel)
     {
         foreach ($exchangeNames as $exchange) {
-            $exchanges[] = $this->exchangeBuilder->create($exchange, $channel);
+            $exchanges[] = $this->exchangeFactory->create($exchange, $channel);
         }
         return $exchanges ?? [];
     }
@@ -118,7 +118,7 @@ class RouteObjectBuilder
     protected function declareQueues(array $queueNames, Channel $channel)
     {
         foreach ($queueNames as $queue) {
-            $queueObjects[] = $this->queueBuilder->create($queue, $channel);
+            $queueObjects[] = $this->queueFactory->create($queue, $channel);
         }
         return $queueObjects ?? [];
     }
@@ -157,6 +157,6 @@ class RouteObjectBuilder
      */
     protected function getExchange(string $name, Channel $channel)
     {
-        return $this->exchangeBuilder->create($name, $channel);
+        return $this->exchangeFactory->create($name, $channel);
     }
 }

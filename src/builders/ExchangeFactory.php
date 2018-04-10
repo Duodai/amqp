@@ -11,11 +11,11 @@ use duodai\amqp\objects\Channel;
 use duodai\amqp\objects\Exchange;
 
 /**
- * Class ExchangeObjectBuilder
+ * Class ExchangeFactory
  * Create exchange object from config
  * @author Michael Janus <mailto:abyssal@mail.ru>
  */
-class ExchangeObjectBuilder
+class ExchangeFactory
 {
 
     /**
@@ -24,7 +24,7 @@ class ExchangeObjectBuilder
     protected $config;
 
     /**
-     * ExchangeObjectBuilder constructor.
+     * ExchangeFactory constructor.
      * @param ExchangeConfig $config
      */
     public function __construct(ExchangeConfig $config)
